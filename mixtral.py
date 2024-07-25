@@ -6,7 +6,7 @@ with open("chiralb.txt") as f:
 
 model = 'mixtral:8x7b'
 
-first_prompt = ''''The following text is a medieval medical treatise written in Old French, around the 12th-13th centuries.
+first_prompt = '''The following text is a medieval medical treatise written in Old French, around the 12th-13th centuries.
 Try to guess what the text means and translate it line by line into English like this:
 Ou cautere de feu comande au malaide qu’il laisse les poilz tant qu’il soient lons et igals; et s’il le poignent a lor nassance, se li estraint les eulz qu’il ne se muevent tant qu’il naissent.
 For the fire cautery, instruct the patient to let the hairs grow long and even; and if they prick at their base, hold the eyes steady so they do not move until they grow.
@@ -16,22 +16,19 @@ Here comes the first sentence to translate. Do not add any comments or contextua
 ctx = 8192
 
 for fnum in range(0, 10):
-    outfile = open(f"mixtral/mixtral_8x7b_{fnum}.tx", "w")
+    with open(f"mixtral_8x7b_{fnum}.txt", "w") as outfile:
+        response = ollama.generate(model=model, prompt=first_prompt + lines[0], options={"num_ctx": ctx})
+        print(f"{lines[0].strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
 
-    response = ollama.generate(model=model, prompt=first_prompt + lines[0], options={"num_ctx": ctx})
-    print(f"{lines[0].strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
-
-    for line in tqdm.tqdm(lines[1:]):
-        print(len(response['context']))
-        if len(response['context']) > 7000:
-            response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
-        else:
-            response = ollama.generate(model=model, prompt=line, options={"num_ctx": ctx}, context=response['context'])
-        if response['response'].strip() == "" or 'context' not in response:
-            response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
-        if response['response'].strip() == "":
-            print(f"{line.strip()}\t", file=outfile)
-        else:
-            print(f"{line.strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
-
-    outfile.close()
+        for line in tqdm.tqdm(lines[1:]):
+            print(len(response['context']))
+            if len(response['context']) > 7000:
+                response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
+            else:
+                response = ollama.generate(model=model, prompt=line, options={"num_ctx": ctx}, context=response['context'])
+            if response['response'].strip() == "" or 'context' not in response:
+                response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
+            if response['response'].strip() == "":
+                print(f"{line.strip()}\t", file=outfile)
+            else:
+                print(f"{line.strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
