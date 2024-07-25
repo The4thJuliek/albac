@@ -16,22 +16,19 @@ Here comes the first sentence to translate. Do not add any comments or contextua
 ctx = 4096
 
 for fnum in range(0, 10):
-    outfile = open(f"mistral/mistral_{fnum}.txt", "w")
+    with open(f"mistral_{fnum}.txt", "w") as outfile:
+        response = ollama.generate(model=model, prompt=first_prompt + lines[0], options={"num_ctx": ctx})
+        print(f"{lines[0].strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
 
-    response = ollama.generate(model=model, prompt=first_prompt + lines[0], options={"num_ctx": ctx})
-    print(f"{lines[0].strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
-
-    for line in tqdm.tqdm(lines[1:]):
-        print(len(response['context']))
-        if len(response['context']) > 3200:
-            response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
-        else:
-            response = ollama.generate(model=model, prompt=line, options={"num_ctx": ctx}, context=response['context'])
-        if response['response'].strip() == "" or 'context' not in response:
-            response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
-        if response['response'].strip() == "":
-            print(f"{line.strip()}\t", file=outfile)
-        else:
-            print(f"{line.strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
-
-    outfile.close()
+        for line in tqdm.tqdm(lines[1:]):
+            print(len(response['context']))
+            if len(response['context']) > 3200:
+                response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
+            else:
+                response = ollama.generate(model=model, prompt=line, options={"num_ctx": ctx}, context=response['context'])
+            if response['response'].strip() == "" or 'context' not in response:
+                response = ollama.generate(model=model, prompt=first_prompt + line, options={"num_ctx": ctx})
+            if response['response'].strip() == "":
+                print(f"{line.strip()}\t", file=outfile)
+            else:
+                print(f"{line.strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
