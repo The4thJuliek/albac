@@ -9,7 +9,7 @@ model = 'mixtral:8x7b'
 first_prompt = '''TThe following text is a medieval medical treatise written in Old French, around the 12th-13th centuries.
 Translate it line by line into English like this:
 When chronic pain comes in the whole head and lasts a long time, the patient should use salves and pills called "cochie", and purgatives for the head and oils and plasters; and if the cautery we mentioned before is applied and it does not work.
-Here comes the first sentence to translate. Do not add any comments or contextual information about the text, like "Here is the translation", don't provide any comments about the text like, "Wow this is hard!", etc. Do not comment on whether the translation is accurate. Just translate the text line-by-line into English and that should be the only text produced in the final output file and nothing else:
+Here comes the first sentence to translate. Do not add any comments or contextual information about the text, like "Here is the translation", don't provide any comments about the text like, "Wow this is hard!", etc. Do not comment on whether the translation is accurate or not, it doesn't matter. Just translate the text line-by-line into English and that should be the only text produced in the final output file and nothing else:
 '''
 
 ctx = 8192
