@@ -1,5 +1,9 @@
 import ollama
 import tqdm
+import os
+
+# Ensure the directory exists
+os.makedirs("llama3_70b", exist_ok=True)
 
 ctx = 6144
 with open("chiralb.txt") as f:
@@ -8,7 +12,7 @@ with open("chiralb.txt") as f:
 model = 'llama3:70b'
 
 for fnum in range(0, 10):
-    with open(f"llama3_70b_{fnum}.txt", "w") as outfile:
+    with open(f"llama3_70b/llama3_70b_{fnum}.txt", "w") as outfile:
         response = ollama.generate(model=model, prompt='''The following text is a medieval medical treatise written in Old French, around the 12th-13th centuries.
 Try to guess what the text means and translate it line by line into English like this:
 Ou cautere de feu comande au malaide qu’il laisse les poilz tant qu’il soient lons et igals; et s’il le poignent a lor nassance, se li estraint les eulz qu’il ne se muevent tant qu’il naissent.
