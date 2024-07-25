@@ -1,5 +1,9 @@
 import ollama
 import tqdm
+import os
+
+# Ensure the directory exists
+os.makedirs("aya8b", exist_ok=True)
 
 with open("chiralb.txt") as f:
     lines = f.readlines()
@@ -16,7 +20,7 @@ Here comes the first sentence to translate. Do not add any comments or contextua
 ctx = 6144
 
 for fnum in range(0, 10):
-    with open(f"aya8b_{fnum}.txt", "w") as outfile:
+    with open(f"aya8b/aya8b_{fnum}.txt", "w") as outfile:
         response = ollama.generate(model=model, prompt=first_prompt + lines[0], options={"num_ctx": ctx})
         print(f"{lines[0].strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
 
