@@ -15,7 +15,7 @@ Here comes the first sentence to translate. Do not add any comments or contextua
 ctx = 4096
 
 for fnum in range(0, 10):
-    outfile = open(f"output/qwen2_7b_{fnum}.txt", "w")
+    outfile = open(f"chiralb.txt", "w")
 
     response = ollama.generate(model=model, prompt=first_prompt + lines[0], options={"num_ctx": ctx})
     print(f"{lines[0].strip()}\t{response['response'].splitlines()[0].strip()}", file=outfile)
